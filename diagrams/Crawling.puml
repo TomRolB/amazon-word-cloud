@@ -1,0 +1,10 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+interface Crawler {
+    + getProductDescription(String url): String
+}
+
+
+
+@enduml
