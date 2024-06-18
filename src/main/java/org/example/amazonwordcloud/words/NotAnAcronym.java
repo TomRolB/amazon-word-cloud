@@ -1,6 +1,6 @@
 package org.example.amazonwordcloud.words;
 
-public class NonAcronymFilter implements WordFilter {
+public class NotAnAcronym implements WordFilter {
     @Override
     public boolean isAvoidable(String text, int start, int end) {
         char startingChar = text.charAt(start);
