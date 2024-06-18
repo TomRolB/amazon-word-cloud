@@ -3,18 +3,18 @@ package org.example.amazonwordcloud.app;
 import org.example.amazonwordcloud.caching.CachingService;
 import org.example.amazonwordcloud.caching.GuavaCaching;
 import org.example.amazonwordcloud.crawling.Crawler;
-import org.example.amazonwordcloud.crawling.JsoupCrawler;
-import org.example.amazonwordcloud.crawling.JsoupOkhttpCrawler;
 import org.example.amazonwordcloud.crawling.SeleniumCrawler;
 import org.example.amazonwordcloud.words.And;
 import org.example.amazonwordcloud.words.FrequencyRanker;
-import org.example.amazonwordcloud.words.NonAcronymFilter;
-import org.example.amazonwordcloud.words.ShortWordFilter;
+import org.example.amazonwordcloud.words.NotAnAcronym;
+import org.example.amazonwordcloud.words.ShortWord;
 import org.example.amazonwordcloud.words.WordRanker;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.time.Duration;
+import java.util.HashSet;
+import java.util.List;
 
 @Configuration
 public class AppConfig {
@@ -29,9 +29,10 @@ public class AppConfig {
     public WordRanker ranker() {
         return new FrequencyRanker(
                 new And(
-                        new NonAcronymFilter(),
-                        new ShortWordFilter()
-                )
+                        new ShortWord(),
+                        new NotAnAcronym()
+                ),
+                new HashSet<>(List.of(' ', ':', '.', ',', '.', '(', ')', '\n'))
         );
     }
 
