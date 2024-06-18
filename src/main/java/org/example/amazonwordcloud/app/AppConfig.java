@@ -39,8 +39,8 @@ public class AppConfig {
     public CachingService caching() {
         return new GuavaCaching(
                 100,
-                Duration.ofMinutes(1),
-                Duration.ofMinutes(1)
+                Duration.ofMinutes(3),
+                Duration.ofMinutes(3)
         );
     }
 }
