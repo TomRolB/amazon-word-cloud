@@ -1,0 +1,51 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+class WordCloudController {
+    - crawler: Crawler
+    - ranker: WordRanker
+    - caching: CachingService
+    + generateCloud(String productUrl): ResponseEntity<?>
+}
+
+interface Crawler {
+    + getProductDescription(String url): String
+}
+interface WordRanker {
+    + getRankedWords(String text): Map<String, Integer>
+}
+interface WordFilter {
+    + isWordAvoidable(String text, int start, int end): boolean
+}
+interface BreakCondition {
+    + isMet(int frequency, int start, int end, int length): boolean
+}
+interface CachingService {
+    + getCachedCloud(String url): Optional<ResponseEntity<?>>
+    + saveCloud(String url, ResponseEntity<?> response);
+}
+
+class FrequencyRanker implements WordRanker {
+    - filter: WordFilter
+    - delimiters: Set<Character>
+    - breakCondition: BreakCondition
+    + getRankedWords(String text): Map<String, Integer>
+}
+
+class GuavaCaching implements CachingService {
+    - cache: Cache<String, ResponseEntity<?>>
+    + getCachedCloud(String url): Optional<ResponseEntity<?>>
+    + saveCloud(String url, ResponseEntity<?> response);
+}
+
+class SeleniumCrawler implements Crawler {
+    + getProductDescription(String url): String
+}
+
+WordCloudController --> Crawler
+WordCloudController --> WordRanker
+WordCloudController --> CachingService
+FrequencyRanker --> WordFilter
+FrequencyRanker --> BreakCondition
+
+@enduml
