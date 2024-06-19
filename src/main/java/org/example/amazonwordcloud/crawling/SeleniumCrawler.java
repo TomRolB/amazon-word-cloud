@@ -1,31 +1,35 @@
 package org.example.amazonwordcloud.crawling;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.PageLoadStrategy;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
-//TODO: use Cacheable?
 @Service
 public class SeleniumCrawler implements Crawler {
-    WebDriver driver;
+    @Override
+    public String getProductDescription(String url) {
+        WebDriver driver = initializeDriver();
+        driver.get(url);
 
-    public SeleniumCrawler() {
-
+        try {
+            return driver.findElement(By.id("productDescription")).getText();
+        } catch (NoSuchElementException e) {
+            System.out.println("Page does not contain the section 'Product Description'");
+            return "";
+        }
     }
 
-    @Override
-    @Cacheable("descriptions")
-    public String getProductDescription(String url) {
+    private static WebDriver initializeDriver() {
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--headless");
         options.addArguments("--disable-javascript");
         options.addArguments("--blink-settings=imagesEnabled=false");
-        driver = new ChromeDriver(options);
+        options.setPageLoadStrategy(PageLoadStrategy.EAGER);
 
-        driver.get(url);
-        return driver.findElement(By.id("productDescription")).getText();
+        return new ChromeDriver(options);
     }
 }

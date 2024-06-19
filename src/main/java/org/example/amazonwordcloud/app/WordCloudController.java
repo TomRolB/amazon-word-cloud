@@ -4,14 +4,11 @@ import org.example.amazonwordcloud.caching.CachingService;
 import org.example.amazonwordcloud.crawling.Crawler;
 import org.example.amazonwordcloud.words.WordRanker;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
 
@@ -32,14 +29,11 @@ public class WordCloudController {
     @PostMapping("/")
     public ResponseEntity<?> generateCloud(@RequestParam("productUrl") String productUrl) {
         Optional<ResponseEntity<?>> cached = caching.getCachedCloud(productUrl);
-        return cached.orElse(fetchDescriptionAndGenerateCloud(productUrl));
-
-        //TODO: URL sanitization
+        return cached.orElseGet(() -> fetchDescriptionAndGenerateCloud(productUrl));
     }
 
     private ResponseEntity<?> fetchDescriptionAndGenerateCloud(String productUrl) {
         String description = crawler.getProductDescription(productUrl);
-        //TODO: may put into separate 'CachingService' and cache it
 
         if (description.isEmpty()) return saveAndReturn(
                 productUrl,

@@ -42,10 +42,33 @@ class SeleniumCrawler implements Crawler {
     + getProductDescription(String url): String
 }
 
+class ConfidenceIntervalCondition implements BreakCondition {
+    - zScore: double
+    - requiredIntervalDistance: double
+    - verifyAfterWordCount: int
+    - maxFrequency: int
+    + isMet(int frequency, int start, int end, int length): boolean
+}
+
+class And implements WordFilter {
+    - first: WordFilter
+    - second: WordFilter
+    + isWordAvoidable(String text, int start, int end): boolean
+}
+
+class ShortWord implements WordFilter {
+    + isWordAvoidable(String text, int start, int end): boolean
+}
+
+class NotAnAcronym implements WordFilter {
+    + isWordAvoidable(String text, int start, int end): boolean
+}
+
 WordCloudController --> Crawler
 WordCloudController --> WordRanker
 WordCloudController --> CachingService
 FrequencyRanker --> WordFilter
 FrequencyRanker --> BreakCondition
+And *-> WordFilter
 
 @enduml

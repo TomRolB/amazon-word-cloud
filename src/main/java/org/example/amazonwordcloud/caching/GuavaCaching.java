@@ -10,7 +10,7 @@ import java.util.Optional;
 
 @Service
 public class GuavaCaching implements CachingService {
-    private Cache<String, ResponseEntity<?>> cache;
+    private final Cache<String, ResponseEntity<?>> cache;
 
     public GuavaCaching(long maximumSize, Duration expireAfterAccess, Duration expireAfterWrite) {
         this.cache = CacheBuilder.newBuilder()

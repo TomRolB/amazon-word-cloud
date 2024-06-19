@@ -10,7 +10,7 @@ public class And implements WordFilter {
     }
 
     @Override
-    public boolean isAvoidable(String text, int start, int end) {
-        return first.isAvoidable(text, start, end) && second.isAvoidable(text, start, end);
+    public boolean isWordAvoidable(String text, int start, int end) {
+        return first.isWordAvoidable(text, start, end) && second.isWordAvoidable(text, start, end);
     }
 }
